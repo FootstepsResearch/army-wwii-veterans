@@ -154,8 +154,8 @@
     <div class="w-full h-[50%] md:w-2/3 md:h-full relative border-b-4 md:border-b-0 md:border-r-4 border-[#556b2f]">
         <div id="map"></div>
         
-        <!-- Service Record Overlay (Updated: Fixed Padding top-12) -->
-        <div class="absolute z-[1000] bg-[#f0f0e6] border-2 border-[#556b2f] shadow-lg transition-all duration-300 top-12 left-4 right-4 rounded md:top-4 md:right-4 md:left-auto md:w-auto md:min-w-[250px] md:max-w-xs">
+        <!-- Service Record Overlay (Updated: INCREASED TOP PADDING TO top-20) -->
+        <div class="absolute z-[1000] bg-[#f0f0e6] border-2 border-[#556b2f] shadow-lg transition-all duration-300 top-20 left-4 right-4 rounded md:top-4 md:right-4 md:left-auto md:w-auto md:min-w-[250px] md:max-w-xs">
             <div class="bg-[#556b2f] text-[#f0f0e6] p-2 flex justify-between items-center cursor-pointer hover:bg-[#3e4f22] transition-colors" onclick="toggleServiceRecord()">
                 <span id="service-record-header" class="font-bold text-xs uppercase tracking-widest">Service Record</span>
                 <button id="service-toggle-btn" class="font-bold text-lg leading-none focus:outline-none transition-colors duration-300">-</button>
@@ -498,7 +498,10 @@
                 const targetZoom = 10;
                 const targetPoint = map.project(data.coords, targetZoom);
                 if (isNaN(targetPoint.x) || isNaN(targetPoint.y)) throw new Error("Map not ready");
-                const offsetY = window.innerWidth > 768 ? 150 : 80;
+                
+                // UPDATED OFFSET: Increased for mobile to push marker down
+                const offsetY = window.innerWidth > 768 ? 150 : 200;
+                
                 const newCenterPoint = L.point(targetPoint.x, targetPoint.y - offsetY);
                 const newCenter = map.unproject(newCenterPoint, targetZoom);
                 map.flyTo(newCenter, targetZoom, { animate: true, duration: 1.5 });
