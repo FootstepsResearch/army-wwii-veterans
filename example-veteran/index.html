@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- UPDATED: Added maximum-scale=1.0, user-scalable=no to prevent auto-zooming on inputs -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>WWII Veteran's Journey</title>
     
     <!-- Tailwind CSS -->
@@ -175,7 +176,8 @@
         <!-- Search -->
         <div class="absolute bottom-6 left-4 z-[1000] flex items-center gap-2 bg-[#556b2f] p-2 rounded shadow-lg border-2 border-[#f0f0e6]">
             <button onclick="toggleSearch()" class="text-white hover:text-yellow-300 flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" /></svg></button>
-            <input type="text" id="search-input" placeholder="FIND..." class="hidden bg-[#f0f0e6] text-[#2c2c2c] text-xs font-mono p-1 rounded w-32 border border-[#8b4513] focus:outline-none placeholder-gray-500" onkeydown="if(event.key === 'Enter') searchTimeline()">
+            <!-- UPDATED: text-base for mobile to prevent zoom, md:text-xs for desktop -->
+            <input type="text" id="search-input" placeholder="FIND..." class="hidden bg-[#f0f0e6] text-[#2c2c2c] text-base md:text-xs font-mono p-1 rounded w-32 border border-[#8b4513] focus:outline-none placeholder-gray-500" onkeydown="if(event.key === 'Enter') searchTimeline()">
             <span id="search-counter" class="text-xs text-white font-mono hidden whitespace-nowrap"></span>
             <button onclick="searchTimeline(1)" id="search-next-btn" class="hidden text-white hover:text-yellow-300 text-xs font-bold px-1">▼</button>
             <button onclick="searchTimeline(-1)" id="search-prev-btn" class="hidden text-white hover:text-yellow-300 text-xs font-bold px-1">▲</button>
