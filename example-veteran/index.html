@@ -495,7 +495,19 @@
                         // FORCE SCROLL TO TOP for the first item
                         document.getElementById('timeline-container').scrollTop = 0;
                     } else {
-                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        // REPLACED scrollIntoView with manual container scroll calculation
+                        // This prevents the whole BODY from scrolling on mobile
+                        const container = document.getElementById('timeline-container');
+                        const itemRect = el.getBoundingClientRect();
+                        const containerRect = container.getBoundingClientRect();
+                        const relativeTop = itemRect.top - containerRect.top;
+                        const currentScroll = container.scrollTop;
+                        const targetScroll = currentScroll + relativeTop - (container.clientHeight / 2) + (itemRect.height / 2);
+                        
+                        container.scrollTo({
+                            top: targetScroll,
+                            behavior: 'smooth'
+                        });
                     }
 
                 } else {
