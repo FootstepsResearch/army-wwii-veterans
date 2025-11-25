@@ -21,7 +21,7 @@
     <!-- CSV Parser -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
-    <!-- LOAD USER CONFIGURATION -->
+     <!-- LOAD USER CONFIGURATION -->
     <script src="config.js"></script>
 
     <style>
@@ -155,8 +155,8 @@
     <div class="w-full h-[50%] md:w-2/3 md:h-full relative border-b-4 md:border-b-0 md:border-r-4 border-[#556b2f]">
         <div id="map"></div>
         
-        <!-- Service Record Overlay (Updated: Z-Index to 1050) -->
-        <div class="absolute z-[1050] bg-[#f0f0e6] border-2 border-[#556b2f] shadow-lg transition-all duration-300 top-28 left-4 right-4 rounded md:top-4 md:right-4 md:left-auto md:w-auto md:min-w-[250px] md:max-w-xs">
+        <!-- Service Record Overlay (Updated: Decreased top padding to top-16) -->
+        <div class="absolute z-[1050] bg-[#f0f0e6] border-2 border-[#556b2f] shadow-lg transition-all duration-300 top-16 left-4 right-4 rounded md:top-4 md:right-4 md:left-auto md:w-auto md:min-w-[250px] md:max-w-xs">
             <div class="bg-[#556b2f] text-[#f0f0e6] p-2 flex justify-between items-center cursor-pointer hover:bg-[#3e4f22] transition-colors" onclick="toggleServiceRecord()">
                 <span id="service-record-header" class="font-bold text-xs uppercase tracking-widest">Service Record</span>
                 <button id="service-toggle-btn" class="font-bold text-lg leading-none focus:outline-none transition-colors duration-300">-</button>
