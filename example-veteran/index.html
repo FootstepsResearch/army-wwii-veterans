@@ -154,8 +154,8 @@
     <div class="w-full h-[50%] md:w-2/3 md:h-full relative border-b-4 md:border-b-0 md:border-r-4 border-[#556b2f]">
         <div id="map"></div>
         
-        <!-- Service Record Overlay (Updated: INCREASED TOP PADDING TO top-28) -->
-        <div class="absolute z-[1000] bg-[#f0f0e6] border-2 border-[#556b2f] shadow-lg transition-all duration-300 top-28 left-4 right-4 rounded md:top-4 md:right-4 md:left-auto md:w-auto md:min-w-[250px] md:max-w-xs">
+        <!-- Service Record Overlay (Updated: Z-Index to 1050) -->
+        <div class="absolute z-[1050] bg-[#f0f0e6] border-2 border-[#556b2f] shadow-lg transition-all duration-300 top-28 left-4 right-4 rounded md:top-4 md:right-4 md:left-auto md:w-auto md:min-w-[250px] md:max-w-xs">
             <div class="bg-[#556b2f] text-[#f0f0e6] p-2 flex justify-between items-center cursor-pointer hover:bg-[#3e4f22] transition-colors" onclick="toggleServiceRecord()">
                 <span id="service-record-header" class="font-bold text-xs uppercase tracking-widest">Service Record</span>
                 <button id="service-toggle-btn" class="font-bold text-lg leading-none focus:outline-none transition-colors duration-300">-</button>
@@ -179,6 +179,8 @@
             <span id="search-counter" class="text-xs text-white font-mono hidden whitespace-nowrap"></span>
             <button onclick="searchTimeline(1)" id="search-next-btn" class="hidden text-white hover:text-yellow-300 text-xs font-bold px-1">▼</button>
             <button onclick="searchTimeline(-1)" id="search-prev-btn" class="hidden text-white hover:text-yellow-300 text-xs font-bold px-1">▲</button>
+            <!-- New Close Button -->
+            <button onclick="clearSearch()" id="search-close-btn" class="hidden text-yellow-400 hover:text-yellow-200 text-lg font-bold px-2">&times;</button>
         </div>
     </div>
 
@@ -565,7 +567,7 @@
 
         function closeContextModal(e) {
             document.getElementById('context-modal').style.display = 'none';
-            // Stop video playback by clearing content
+            // Clear content to stop videos from playing in background
             document.getElementById('veteran-event-details').innerHTML = '';
             document.getElementById('context-content').innerHTML = '';
         }
@@ -688,17 +690,39 @@
             const input = document.getElementById('search-input');
             const nextBtn = document.getElementById('search-next-btn');
             const prevBtn = document.getElementById('search-prev-btn');
+            const closeBtn = document.getElementById('search-close-btn');
             const counter = document.getElementById('search-counter');
             if (input.classList.contains('hidden')) {
                 input.classList.remove('hidden');
                 input.focus();
+                closeBtn.classList.remove('hidden');
             } else {
                 input.classList.add('hidden');
                 nextBtn.classList.add('hidden');
                 prevBtn.classList.add('hidden');
+                closeBtn.classList.add('hidden');
                 counter.classList.add('hidden');
                 input.value = '';
             }
+        }
+
+        function clearSearch() {
+            const input = document.getElementById('search-input');
+            const nextBtn = document.getElementById('search-next-btn');
+            const prevBtn = document.getElementById('search-prev-btn');
+            const closeBtn = document.getElementById('search-close-btn');
+            const counter = document.getElementById('search-counter');
+            
+            input.value = '';
+            input.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            prevBtn.classList.add('hidden');
+            closeBtn.classList.add('hidden');
+            counter.classList.add('hidden');
+            
+            // Reset search matches
+            searchMatches = [];
+            currentSearchMatchIndex = -1;
         }
 
         function searchTimeline(direction = 0) {
