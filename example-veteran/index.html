@@ -20,7 +20,7 @@
     <!-- CSV Parser -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
-     <!-- LOAD USER CONFIGURATION -->
+    <!-- LOAD USER CONFIGURATION -->
     <script src="config.js"></script>
 
     <style>
@@ -565,6 +565,9 @@
 
         function closeContextModal(e) {
             document.getElementById('context-modal').style.display = 'none';
+            // Stop video playback by clearing content
+            document.getElementById('veteran-event-details').innerHTML = '';
+            document.getElementById('context-content').innerHTML = '';
         }
 
         function navigateContext(direction) {
