@@ -21,9 +21,9 @@
     <!-- CSV Parser -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
-    <!-- LOAD USER CONFIGURATION -->
+     <!-- LOAD USER CONFIGURATION -->
     <script src="config.js"></script>
-
+    
     <style>
         /* --- BASE STYLES --- */
         body { font-family: 'Courier Prime', monospace; background-color: #f0f0e6; color: #2c2c2c; }
@@ -236,6 +236,74 @@
             initServiceRecordState();
         });
 
+        // Make activateEvent GLOBALLY accessible so inline onclick works
+        window.activateEvent = function(id, openPopup = true, force = false) {
+            if (activeId === id && openPopup && !force) return;
+            activeId = id;
+            const data = journeyData.find(d => d.id === id);
+            if(!data) return;
+
+            document.querySelectorAll('.timeline-item').forEach(el => {
+                if (parseInt(el.dataset.id) === id) {
+                    el.classList.add('active');
+                    
+                    // UPDATED: Logic to force scroll if force is true OR it is the first item
+                    if (id === 1 || force) {
+                        const container = document.getElementById('timeline-container');
+                        if (id === 1) {
+                            // Simple scroll to top for the first item
+                            container.scrollTop = 0;
+                        } else {
+                            // Calculated scroll for others if forced
+                            const itemRect = el.getBoundingClientRect();
+                            const containerRect = container.getBoundingClientRect();
+                            const relativeTop = itemRect.top - containerRect.top;
+                            const currentScroll = container.scrollTop;
+                            const targetScroll = currentScroll + relativeTop - (container.clientHeight / 2) + (itemRect.height / 2);
+                            container.scrollTo({
+                                top: targetScroll,
+                                behavior: 'smooth'
+                            });
+                        }
+                    } else {
+                         // Standard behavior for clicks
+                        const container = document.getElementById('timeline-container');
+                        const itemRect = el.getBoundingClientRect();
+                        const containerRect = container.getBoundingClientRect();
+                        const relativeTop = itemRect.top - containerRect.top;
+                        const currentScroll = container.scrollTop;
+                        const targetScroll = currentScroll + relativeTop - (container.clientHeight / 2) + (itemRect.height / 2);
+                        container.scrollTo({
+                            top: targetScroll,
+                            behavior: 'smooth'
+                        });
+                    }
+
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+            const marker = markers[id];
+            
+            // Map FlyTo Logic
+            try {
+                const targetZoom = 10;
+                const targetPoint = map.project(data.coords, targetZoom);
+                if (isNaN(targetPoint.x) || isNaN(targetPoint.y)) throw new Error("Map not ready");
+                
+                // UPDATED OFFSET: Decreased to 80 for 40% height map
+                const offsetY = window.innerWidth > 768 ? 150 : 80;
+                
+                const newCenterPoint = L.point(targetPoint.x, targetPoint.y - offsetY);
+                const newCenter = map.unproject(newCenterPoint, targetZoom);
+                map.flyTo(newCenter, targetZoom, { animate: true, duration: 1.5 });
+            } catch(e) {
+                map.flyTo(data.coords, 10);
+            }
+            
+            if (openPopup && marker) marker.openPopup();
+        }
+
         function initApp() {
             // Check if config file loaded (typeof PROFILE_CSV_URL !== 'undefined')
             // If not, load hardcoded data immediately
@@ -437,23 +505,29 @@
                 L.polyline(polylinePoints, { color: '#8b4513', weight: 3, opacity: 0.6, dashArray: '10, 10', lineCap: 'round' }).addTo(map);
             }
             
-            // Add End Node
+            // Add End Node with Direct Property Assignment (Best Practice)
             const endNode = document.createElement('div');
             endNode.className = 'relative pl-12 pr-4 py-6';
-            endNode.innerHTML = `
-                <div class="absolute left-[1.65rem] top-6 w-3 h-3 rounded-full bg-[#8b4513] z-20 shadow-sm"></div>
-                <div class="text-[#8b4513] font-bold uppercase tracking-widest text-sm italic cursor-pointer hover:underline hover:text-[#556b2f] end-link-action">
-                    Return to Top
-                </div>
-            `;
-            // Find the specific text element we just created
-            const link = endNode.querySelector('.end-link-action');
-            if (link) {
-                link.addEventListener('click', (e) => {
-                    e.stopPropagation(); // Good practice
-                    activateEvent(1);
-                });
-            }
+            
+            // 1. Create the dot
+            const dot = document.createElement('div');
+            dot.className = 'absolute left-[1.65rem] top-6 w-3 h-3 rounded-full bg-[#8b4513] z-20 shadow-sm';
+            endNode.appendChild(dot);
+
+            // 2. Create the button
+            const button = document.createElement('button');
+            button.className = 'text-[#8b4513] font-bold uppercase tracking-widest text-sm italic hover:underline hover:text-[#556b2f] focus:outline-none bg-transparent border-none cursor-pointer flex items-center gap-1';
+            button.innerHTML = '<span class="text-lg">▲</span> Return to Top';
+            
+            // 3. DIRECT PROPERTY ASSIGNMENT
+            // This is the most robust way to attach a simple handler
+            button.onclick = function(e) {
+                e.stopPropagation();
+                console.log("Return to Top Clicked");
+                activateEvent(1, true, true); // Call with force=true
+            };
+            
+            endNode.appendChild(button);
             timelineList.appendChild(endNode);
             
             // Init First
