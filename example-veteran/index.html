@@ -154,8 +154,8 @@
     <div class="w-full h-[50%] md:w-2/3 md:h-full relative border-b-4 md:border-b-0 md:border-r-4 border-[#556b2f]">
         <div id="map"></div>
         
-        <!-- Service Record Overlay (Updated: Top Bar on Mobile) -->
-        <div class="absolute z-[1000] bg-[#f0f0e6] border-b-2 border-[#556b2f] md:border-2 shadow-lg transition-all duration-300 top-0 left-0 right-0 w-full md:top-4 md:right-4 md:left-auto md:w-auto md:min-w-[250px] md:max-w-xs md:rounded md:border-b-2">
+        <!-- Service Record Overlay (Updated: Fixed Padding top-12) -->
+        <div class="absolute z-[1000] bg-[#f0f0e6] border-2 border-[#556b2f] shadow-lg transition-all duration-300 top-12 left-4 right-4 rounded md:top-4 md:right-4 md:left-auto md:w-auto md:min-w-[250px] md:max-w-xs">
             <div class="bg-[#556b2f] text-[#f0f0e6] p-2 flex justify-between items-center cursor-pointer hover:bg-[#3e4f22] transition-colors" onclick="toggleServiceRecord()">
                 <span id="service-record-header" class="font-bold text-xs uppercase tracking-widest">Service Record</span>
                 <button id="service-toggle-btn" class="font-bold text-lg leading-none focus:outline-none transition-colors duration-300">-</button>
@@ -727,4 +727,3 @@
     </script>
 </body>
 </html>
-
