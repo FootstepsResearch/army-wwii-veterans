@@ -276,7 +276,7 @@
                 header: true,
                 complete: function(results) {
                     journeyData = results.data
-                        .filter(row => row['Veteran_ID'] && row['Latitude']) 
+                        .filter(row => row['Latitude'])  // UPDATED: Removed 'Veteran_ID' check
                         .map((row, index) => {
                             return {
                                 id: index + 1, 
