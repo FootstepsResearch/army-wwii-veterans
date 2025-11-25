@@ -20,7 +20,7 @@
     <!-- CSV Parser -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
-    <!-- LOAD USER CONFIGURATION -->
+     <!-- LOAD USER CONFIGURATION -->
     <script src="config.js"></script>
 
     <style>
@@ -486,7 +486,14 @@
             document.querySelectorAll('.timeline-item').forEach(el => {
                 if (parseInt(el.dataset.id) === id) {
                     el.classList.add('active');
-                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    if (id === 1) {
+                        // FORCE SCROLL TO TOP for the first item
+                        document.getElementById('timeline-container').scrollTop = 0;
+                    } else {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+
                 } else {
                     el.classList.remove('active');
                 }
