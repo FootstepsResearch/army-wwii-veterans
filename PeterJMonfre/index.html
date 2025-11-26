@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- UPDATED: Added maximum-scale=1.0, user-scalable=no to prevent auto-zooming on inputs -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WWII Veteran's Journey</title>
+    <title>Peter J. Monfre's WWII Journey</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,7 +21,7 @@
     <!-- CSV Parser -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
-     <!-- LOAD USER CONFIGURATION -->
+    <!-- LOAD USER CONFIGURATION -->
     <script src="config.js"></script>
     
     <style>
@@ -415,6 +415,9 @@
             timelineList.innerHTML = '';
             timelineList.appendChild(line);
 
+            // Keep track of coordinates to detect duplicates for jitter
+            let coordMap = {};
+
             let polylinePoints = [];
 
             journeyData.forEach((evt, index) => {
@@ -473,6 +476,31 @@
                 
                 timelineList.appendChild(item);
                 item.addEventListener('click', () => activateEvent(evt.id));
+
+                // --- JITTER LOGIC START ---
+                // Check if this coordinate key already exists
+                let lat = evt.coords[0];
+                let lng = evt.coords[1];
+                const key = `${lat.toFixed(5)},${lng.toFixed(5)}`;
+
+                if (coordMap[key]) {
+                    // Found a duplicate! Add slight random jitter
+                    // ~0.0001 is roughly 11 meters, usually enough to separate pins visually without moving them "too far"
+                    const jitterAmount = 0.00025; 
+                    const angle = Math.random() * Math.PI * 2;
+                    
+                    lat += Math.cos(angle) * jitterAmount;
+                    lng += Math.sin(angle) * jitterAmount;
+                    
+                    // Update the event coords so the line draws to the new jittered spot
+                    evt.coords = [lat, lng];
+                }
+                
+                // Mark this (potentially new) coord as used
+                // We use the original key to track duplicates of the *source* data
+                // or we could track the new one. Usually tracking the source key is enough to jitter subsequent ones.
+                coordMap[key] = true; 
+                // --- JITTER LOGIC END ---
 
                 // Map Marker
                 const marker = L.marker(evt.coords, { icon: createCustomIcon(evt.icon, evt.type) }).addTo(map);
@@ -871,5 +899,3 @@
     </script>
 </body>
 </html>
-
-
