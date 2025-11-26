@@ -21,7 +21,7 @@
     <!-- CSV Parser -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
-    <!-- LOAD USER CONFIGURATION -->
+     <!-- LOAD USER CONFIGURATION -->
     <script src="config.js"></script>
     
     <style>
@@ -51,9 +51,35 @@
         .texture-overlay { background-color: rgba(240, 240, 230, 0.92); position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: -1; }
 
         /* --- PHOTO/VIDEO THUMBNAILS --- */
-        .photo-container { position: relative; border: 6px solid #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.3); background: #fff; margin-top: 12px; transform: rotate(-1deg); transition: all 0.4s ease; overflow: hidden; min-height: 200px; cursor: zoom-in; }
+        /* UPDATED: Added container-type and max-height logic to limit portrait images to 1:1 ratio while keeping landscape images natural */
+        .photo-container { 
+            position: relative; 
+            border: 6px solid #fff; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3); 
+            background: #fff; 
+            margin-top: 12px; 
+            transform: rotate(-1deg); 
+            transition: all 0.4s ease; 
+            overflow: hidden; 
+            /* Removed min-height to allow hugging of landscape images */
+            /* min-height: 200px; */ 
+            container-type: inline-size; /* Enables container queries */
+            cursor: zoom-in; 
+        }
         .photo-container:hover { transform: rotate(0deg) scale(1.01); z-index: 50; }
-        .vintage-photo { width: 100%; height: auto; display: block; filter: sepia(0.5) contrast(1.1) brightness(0.9); transition: filter 0.3s ease; }
+        
+        .vintage-photo { 
+            width: 100%; 
+            height: auto; 
+            display: block; 
+            filter: sepia(0.5) contrast(1.1) brightness(0.9); 
+            transition: filter 0.3s ease;
+            
+            /* Logic for max 1:1 ratio */
+            max-height: 100cqw; /* Cap height at the width of the container */
+            object-fit: cover;  /* Crop content if height is capped */
+            object-position: top center; /* Keep heads visible in cropped portraits */
+        }
         .photo-container:hover .vintage-photo { filter: sepia(0) contrast(1) brightness(1); }
 
         .play-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid #fff; pointer-events: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
@@ -83,7 +109,10 @@
         .source-btn { font-size: 10px; color: #556b2f; text-decoration: underline; cursor: pointer; background: none; border: none; padding: 0; margin-top: 4px; font-family: 'Courier Prime', monospace; font-weight: bold; }
         .source-content { display: none; font-size: 10px; color: #666; margin-top: 4px; font-style: italic; border-left: 2px solid #ccc; padding-left: 8px; }
         .report-images { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 1rem; }
-        .report-img { width: 100%; height: 150px; object-fit: cover; border: 4px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: zoom-in; }
+        
+        /* UPDATED: Changed height:150px to aspect-ratio:1/1 for perfect square crops in the report */
+        .report-img { width: 100%; height: auto; aspect-ratio: 1 / 1; object-fit: cover; border: 4px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: zoom-in; }
+        
         .report-video-container { width: 100%; margin-bottom: 15px; border: 4px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         .video-aspect { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; background: #000; }
         .video-aspect iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
