@@ -145,7 +145,8 @@
         <button onclick="closeLightbox(event)" class="absolute top-4 right-4 text-white text-4xl hover:text-gray-300">&times;</button>
         <button id="lb-prev-btn" class="lb-nav-btn lb-prev" onclick="changeLightboxImage(-1, event)">&lt;</button>
         <button id="lb-next-btn" class="lb-nav-btn lb-next" onclick="changeLightboxImage(1, event)">&gt;</button>
-        <img id="lightbox-img" src="" alt="Full screen view" onclick="event.stopPropagation()">
+        <!-- UPDATED: Removed onclick="event.stopPropagation()" so clicks bubble up to closeLightbox -->
+        <img id="lightbox-img" src="" alt="Full screen view">
         <div id="lightbox-source" class="lb-source-container" onclick="event.stopPropagation()"></div>
     </div>
 
@@ -706,7 +707,8 @@
         }
 
         function closeLightbox(e) {
-            if (!e || e.target.id === 'lightbox' || e.target.tagName === 'BUTTON') {
+            // UPDATED: Added e.target.tagName === 'IMG' to allow clicking the photo to close it
+            if (!e || e.target.id === 'lightbox' || e.target.tagName === 'BUTTON' || e.target.tagName === 'IMG') {
                 document.getElementById('lightbox').style.display = 'none';
             }
         }
