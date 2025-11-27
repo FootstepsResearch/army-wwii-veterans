@@ -21,7 +21,7 @@
     <!-- CSV Parser -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
-     <!-- LOAD USER CONFIGURATION -->
+    <!-- LOAD USER CONFIGURATION -->
     <script src="config.js"></script>
     
     <style>
@@ -353,6 +353,14 @@
                 complete: function(results) {
                     if(results.data.length > 0) {
                         const row = results.data[0];
+                        
+                        // UPDATED: Dynamically get Page Title from Column I (Index 8)
+                        let dynamicTitle = null;
+                        const rowValues = Object.values(row);
+                        if (rowValues.length > 8) {
+                            dynamicTitle = rowValues[8];
+                        }
+
                         veteranProfile = {
                             name: row['Full Name'],
                             birthday: row['Birthday'],
@@ -361,7 +369,8 @@
                             branch: row['Branch'],
                             unit: row['Unit'],
                             photo: row['Photo_URL'],
-                            logo: row['Unit_Logo_URL']
+                            logo: row['Unit_Logo_URL'],
+                            pageTitle: dynamicTitle // Store it
                         };
                         renderProfile();
                     }
@@ -404,6 +413,11 @@
         // --- 3. RENDERING FUNCTIONS ---
 
         function renderProfile() {
+            // UPDATED: Set Document Title if available
+            if (veteranProfile.pageTitle && veteranProfile.pageTitle.trim() !== "") {
+                document.title = veteranProfile.pageTitle;
+            }
+
             document.getElementById('profile-name').innerText = veteranProfile.name || "Unknown";
             document.getElementById('timeline-header-name').innerText = veteranProfile.name || "Unknown";
             document.getElementById('service-record-header').innerText = "Service Record: " + (veteranProfile.name || "");
