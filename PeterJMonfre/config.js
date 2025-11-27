@@ -13,5 +13,6 @@ const TIMELINE_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQM5pl
 // (Optional) Google Gemini API Key
 // Only needed if you want the "What else happened today" button to work.
 
-const GOOGLE_API_KEY = "";
+const GOOGLE_API_KEY = "AIzaSyBLiYDR4Cv-hAxiev6URCwY4GPthF72ERI";
+
 
